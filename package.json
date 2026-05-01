@@ -1,0 +1,15 @@
+{
+  "name": "travel-plan-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "latest",
+    "express": "latest",
+    "zod": "latest"
+  }
+}

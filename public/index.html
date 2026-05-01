@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TravelPlanWeb</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <aside class="panel">
+      <h1>TravelPlanWeb</h1>
+      <p class="hint">用 DeepSeek 生成行程，在地图标点，并按天查看推荐路线。</p>
+
+      <form id="planForm" class="form">
+        <label>
+          目的地
+          <input name="destination" required maxlength="80" placeholder="例如：郑州">
+        </label>
+        <label>
+          天数
+          <input name="days" type="number" min="1" max="14" value="2" required>
+        </label>
+        <label>
+          偏好
+          <textarea name="interests" maxlength="500" placeholder="例如：拍照、美食、博物馆、轻松路线"></textarea>
+        </label>
+        <label>
+          节奏
+          <select name="pace">
+            <option value="relaxed">轻松</option>
+            <option value="balanced" selected>均衡</option>
+            <option value="intensive">紧凑</option>
+          </select>
+        </label>
+        <button id="generateButton" type="submit">生成行程</button>
+      </form>
+
+      <section id="planSummary" class="summary"></section>
+      <section id="routeControls" class="route-controls"></section>
+      <section id="dayList" class="day-list"></section>
+    </aside>
+    <section id="map" class="map"></section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

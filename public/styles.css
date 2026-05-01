@@ -1,0 +1,166 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, "Microsoft YaHei", system-ui, sans-serif;
+  color: #1f2937;
+  background: #f3f4f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  min-height: 100vh;
+}
+
+.panel {
+  overflow-y: auto;
+  max-height: 100vh;
+  padding: 24px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+}
+
+.panel h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.hint {
+  margin: 0 0 20px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #ffffff;
+}
+
+textarea {
+  min-height: 86px;
+  resize: vertical;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: #ffffff;
+  background: #2563eb;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.map {
+  min-height: 100vh;
+}
+
+.summary,
+.route-controls,
+.day-list {
+  margin-top: 20px;
+}
+
+.summary-card,
+.day-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  background: #f9fafb;
+}
+
+.summary-card h2,
+.day-card h3 {
+  margin: 0 0 8px;
+}
+
+.route-controls {
+  display: grid;
+  gap: 8px;
+}
+
+.route-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #1f2937;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+}
+
+.day-list {
+  display: grid;
+  gap: 12px;
+}
+
+.stop-list {
+  margin: 10px 0 0;
+  padding-left: 20px;
+}
+
+.stop-list li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.stop-type {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    max-height: none;
+    border-right: 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .map {
+    min-height: 60vh;
+  }
+}
