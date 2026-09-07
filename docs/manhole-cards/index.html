@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<title>东京井盖卡｜2026/9/9–9/13</title>
+<meta name="description" content="东京 2026/9/9–9/13 可领取井盖卡卡面预览、筛选与 My Maps CSV 导出">
+<style>
+:root{
+  --bg:#f6f4ef; --card:#fff; --ink:#171717; --muted:#6b6b6b; --line:#e7e1d8;
+  --accent:#1e6d61; --accent-ink:#fff; --yes:#dff4e9; --maybe:#fff0bf; --no:#f8e2e2;
+  --shadow:0 5px 24px rgba(40,35,28,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit}
+a{color:inherit}
+.header{
+  position:sticky;top:0;z-index:30;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+  padding:max(12px,env(safe-area-inset-top)) 14px 10px;
+}
+.header-inner{max-width:1180px;margin:0 auto}
+.title-row{display:flex;align-items:flex-end;gap:12px}
+h1{font-size:20px;line-height:1.25;margin:0;font-weight:760;letter-spacing:-.02em}
+.subtitle{font-size:12px;color:var(--muted);margin:4px 0 10px}
+.controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.search{
+  width:100%;height:42px;border:1px solid var(--line);border-radius:12px;background:#fff;
+  padding:0 12px;outline:none;
+}
+.filter-btn,.export-btn{
+  height:42px;border-radius:12px;border:1px solid var(--line);background:#fff;padding:0 13px;font-weight:650;
+}
+.export-btn{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);white-space:nowrap}
+.filterbar{
+  display:none;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px
+}
+.filterbar.open{display:grid}
+.filterbar select{
+  min-width:0;height:40px;border:1px solid var(--line);border-radius:11px;background:#fff;padding:0 9px
+}
+.summary{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:9px;font-size:12px;color:var(--muted)}
+main{max-width:1180px;margin:0 auto;padding:14px 12px 42px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);
+}
+.card.choice-想去{outline:2px solid #77b997}
+.card.choice-可选{outline:2px solid #dfc36d}
+.card.choice-不去{opacity:.56}
+.image-wrap{
+  position:relative;background:#ece8e1;min-height:280px;display:flex;align-items:center;justify-content:center;
+}
+.card-image{
+  display:block;width:100%;height:auto;max-height:76vh;object-fit:contain;background:#ece8e1;
+  image-rendering:auto;
+}
+.image-fail{
+  min-height:300px;width:100%;display:none;align-items:center;justify-content:center;text-align:center;padding:28px;color:var(--muted)
+}
+.hd-pill{
+  position:absolute;right:10px;top:10px;background:rgba(0,0,0,.68);color:#fff;border-radius:999px;
+  font-size:11px;padding:5px 8px;backdrop-filter:blur(4px)
+}
+.card-body{padding:13px 14px 14px}
+.topline{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.card-id{font-weight:800;font-size:15px;line-height:1.3}
+.design{font-size:17px;font-weight:720;line-height:1.35;margin-top:3px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+.badge{font-size:11px;padding:4px 7px;border-radius:999px;background:#f0eee9;color:#555}
+.decision{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 12px;
+}
+.choice{
+  border:1px solid var(--line);background:#faf9f7;border-radius:10px;height:38px;font-weight:650;
+}
+.choice.active[data-value="想去"]{background:var(--yes);border-color:#77b997}
+.choice.active[data-value="可选"]{background:var(--maybe);border-color:#dfc36d}
+.choice.active[data-value="不去"]{background:var(--no);border-color:#d9a4a4}
+.info{display:grid;gap:8px}
+.info-row{display:grid;grid-template-columns:58px 1fr;gap:8px;font-size:13px;line-height:1.45}
+.label{color:var(--muted)}
+.value{min-width:0;overflow-wrap:anywhere}
+.link{color:var(--accent);text-decoration:none;font-weight:650}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.action{
+  min-height:40px;border:1px solid var(--line);background:#fff;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:13px;font-weight:680;padding:8px
+}
+.action.primary{background:#f0f7f5;border-color:#cce1db;color:#165b51}
+.empty{text-align:center;color:var(--muted);padding:70px 20px}
+.backtop{
+  position:fixed;right:14px;bottom:max(14px,env(safe-area-inset-bottom));z-index:20;
+  width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.9);
+  box-shadow:var(--shadow);display:none
+}
+.lightbox{
+  position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;
+  padding:max(14px,env(safe-area-inset-top)) 10px max(14px,env(safe-area-inset-bottom));
+}
+.lightbox.open{display:flex}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain}
+.lightbox-close{
+  position:absolute;right:14px;top:max(14px,env(safe-area-inset-top));width:44px;height:44px;border:0;border-radius:50%;
+  background:rgba(255,255,255,.18);color:#fff;font-size:24px
+}
+.toast{
+  position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:#171717;color:#fff;border-radius:999px;padding:10px 14px;font-size:12px;z-index:120;
+  opacity:0;pointer-events:none;transition:.2s
+}
+.toast.show{opacity:1}
+
+@media(min-width:700px){
+  .header{padding:16px 20px 12px}
+  h1{font-size:25px}
+  .controls{grid-template-columns:minmax(280px,1fr) auto auto}
+  .filterbar{grid-template-columns:repeat(4,minmax(0,1fr))}
+  main{padding:20px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+  .card-image{max-height:610px}
+}
+@media(min-width:1040px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .card-image{max-height:530px}
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="title-row"><h1>东京井盖卡</h1></div>
+    <div class="subtitle">2026/9/9–9/13 可领取 · 高清卡面优先 · 共 <span id="total"></span> 个领取点</div>
+    <div class="controls">
+      <input id="q" class="search" type="search" inputmode="search" placeholder="搜角色、卡号、区域、地点…">
+      <button id="filterToggle" class="filter-btn" type="button">筛选</button>
+      <button id="exportBtn" class="export-btn" type="button">导出想去 CSV</button>
+    </div>
+    <div id="filterbar" class="filterbar">
+      <select id="area"><option value="">全部区域</option></select>
+      <select id="category"><option value="">全部分类</option></select>
+      <select id="decision">
+        <option value="">全部决定</option><option value="想去">想去</option><option value="可选">可选</option>
+        <option value="不去">不去</option><option value="未决定">未决定</option>
+      </select>
+      <select id="sort">
+        <option value="default">默认顺序</option><option value="wanted">想去优先</option><option value="area">按区域</option>
+      </select>
+    </div>
+    <div class="summary">
+      <span id="count"></span><span id="picked"></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div id="grid" class="grid"></div>
+  <div id="empty" class="empty" hidden>没有符合当前筛选条件的卡。</div>
+</main>
+
+<button id="backtop" class="backtop" aria-label="返回顶部">↑</button>
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true">
+  <button id="lightboxClose" class="lightbox-close" aria-label="关闭">×</button>
+  <img id="lightboxImg" alt="卡面高清预览">
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="./data.js"></script>
+<script>
+const DATA = window.MANHOLE_DATA || [];
+const STORAGE_KEY = "tokyo_manhole_choices_v2";
+const choices = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+const $ = id => document.getElementById(id);
+const grid=$("grid"), q=$("q"), area=$("area"), category=$("category"), decision=$("decision"), sort=$("sort");
+$("total").textContent=DATA.length;
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function mapUrl(a){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(a)}
+function getChoice(id){return choices[id]||""}
+function setChoice(id,v){
+  if(v) choices[id]=v; else delete choices[id];
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(choices));
+  render();
+}
+function initFilters(){
+  [...new Set(DATA.map(x=>x.area).filter(Boolean))].sort().forEach(v=>area.insertAdjacentHTML("beforeend",`<option value="${esc(v)}">${esc(v)}</option>`));
+  [...new Set(DATA.map(x=>x.category).filter(Boolean))].sort().forEach(v=>category.insertAdjacentHTML("beforeend",`<option value="${esc(v)}">${esc(v)}</option>`));
+}
+function filteredData(){
+  const text=q.value.trim().toLowerCase();
+  let arr=DATA.filter(x=>{
+    const c=getChoice(x.id);
+    const blob=[x.name,x.card,x.design,x.venue,x.address,x.area,x.category,x.notes].join(" ").toLowerCase();
+    if(text && !blob.includes(text)) return false;
+    if(area.value && x.area!==area.value) return false;
+    if(category.value && x.category!==category.value) return false;
+    if(decision.value==="未决定" && c) return false;
+    if(decision.value && decision.value!=="未决定" && c!==decision.value) return false;
+    return true;
+  });
+  if(sort.value==="wanted"){
+    const rank={"想去":0,"可选":1,"":2,"不去":3};
+    arr.sort((a,b)=>(rank[getChoice(a.id)]??2)-(rank[getChoice(b.id)]??2));
+  }else if(sort.value==="area"){
+    arr.sort((a,b)=>a.area.localeCompare(b.area,"zh"));
+  }
+  return arr;
+}
+function cardHTML(x){
+  const c=getChoice(x.id);
+  const notes=x.notes?`<div class="info-row"><div class="label">备注</div><div class="value">${esc(x.notes)}</div></div>`:"";
+  return `<article class="card ${c?`choice-${esc(c)}`:""}" data-id="${x.id}">
+    <div class="image-wrap">
+      <img class="card-image" src="${esc(x.image)}" alt="${esc(x.design)} 卡面" loading="lazy" decoding="async"
+           data-full="${esc(x.image)}" referrerpolicy="no-referrer"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="image-fail">图片加载失败<br><a class="link" href="${esc(x.image)}" target="_blank" rel="noopener">打开官方高清原图</a></div>
+      <span class="hd-pill">高清原图 · 点按放大</span>
+    </div>
+    <div class="card-body">
+      <div class="topline">
+        <div>
+          <div class="card-id">${esc(x.card)}</div>
+          <div class="design">${esc(x.design)}</div>
+        </div>
+      </div>
+      <div class="badges"><span class="badge">${esc(x.area)}</span><span class="badge">${esc(x.category)}</span></div>
+      <div class="decision">
+        ${["想去","可选","不去"].map(v=>`<button class="choice ${c===v?"active":""}" data-value="${v}" data-id="${x.id}">${v}</button>`).join("")}
+      </div>
+      <div class="info">
+        <div class="info-row"><div class="label">地点</div><div class="value">${esc(x.venue)}</div></div>
+        <div class="info-row"><div class="label">日期</div><div class="value">${esc(x.dates)}</div></div>
+        <div class="info-row"><div class="label">时间</div><div class="value">${esc(x.hours)}</div></div>
+        <div class="info-row"><div class="label">地址</div><div class="value">${esc(x.address)}</div></div>
+        ${notes}
+      </div>
+      <div class="actions">
+        <a class="action primary" href="${mapUrl(x.address)}" target="_blank" rel="noopener">Google Maps</a>
+        <a class="action" href="${esc(x.image)}" target="_blank" rel="noopener">官方高清图</a>
+      </div>
+    </div>
+  </article>`;
+}
+function render(){
+  const arr=filteredData();
+  grid.innerHTML=arr.map(cardHTML).join("");
+  $("empty").hidden=arr.length!==0;
+  $("count").textContent=`显示 ${arr.length} / ${DATA.length}`;
+  const yes=DATA.filter(x=>getChoice(x.id)==="想去").length;
+  const maybe=DATA.filter(x=>getChoice(x.id)==="可选").length;
+  $("picked").textContent=`想去 ${yes} · 可选 ${maybe}`;
+}
+function toast(msg){
+  $("toast").textContent=msg;$("toast").classList.add("show");
+  clearTimeout(window.__toast);window.__toast=setTimeout(()=>$("toast").classList.remove("show"),1800);
+}
+function csvEscape(v){
+  v=String(v??"");return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v;
+}
+function exportWanted(){
+  const arr=DATA.filter(x=>getChoice(x.id)==="想去");
+  if(!arr.length){toast("还没有标记“想去”的卡");return}
+  const h=["Name","Card_ID","Design_or_Character","Distribution_Venue","Address","Distribution_Hours","Available_Dates_2026_09_09_to_09_13","Area_Group","Category","Image_URL","Source_URL","Notes"];
+  const rs=arr.map(x=>[x.name,x.card,x.design,x.venue,x.address,x.hours,x.dates,x.area,x.category,x.image,x.source,x.notes]);
+  const csv="\uFEFF"+[h,...rs].map(r=>r.map(csvEscape).join(",")).join("\r\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="东京井盖卡_想去_MyMaps.csv";a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+grid.addEventListener("click",e=>{
+  const btn=e.target.closest(".choice");
+  if(btn){
+    const id=Number(btn.dataset.id),v=btn.dataset.value;
+    setChoice(id,getChoice(id)===v?"":v);return;
+  }
+  const img=e.target.closest(".card-image");
+  if(img){
+    $("lightboxImg").src=img.dataset.full;
+    $("lightbox").classList.add("open");
+    document.body.style.overflow="hidden";
+  }
+});
+$("lightboxClose").onclick=()=>{$("lightbox").classList.remove("open");document.body.style.overflow=""};
+$("lightbox").addEventListener("click",e=>{if(e.target===$("lightbox"))$("lightboxClose").click()});
+$("filterToggle").onclick=()=>$("filterbar").classList.toggle("open");
+$("exportBtn").onclick=exportWanted;
+[q,area,category,decision,sort].forEach(el=>el.addEventListener(el===q?"input":"change",render));
+window.addEventListener("scroll",()=>{$("backtop").style.display=scrollY>700?"block":"none"});
+$("backtop").onclick=()=>scrollTo({top:0,behavior:"smooth"});
+initFilters();render();
+</script>
+</body>
+</html>
